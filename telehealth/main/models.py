@@ -30,7 +30,7 @@ class User(AbstractUser):
 
 
 class Doctor(User):
-    patient = models.ForeignKey("Patient", on_delete=models.SET_NULL, related_name="doctors_of_patient", blank=True, null=True)
+    patient = models.ManyToManyField("Patient", related_name="doctors_of_patient")
 
     class Meta:
         verbose_name = 'Doctor'
