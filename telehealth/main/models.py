@@ -29,6 +29,13 @@ class User(AbstractUser):
             raise ValidationError("The date of birth should not be in the future")
 
 
+class Patient(User):
+
+    class Meta:
+        verbose_name = 'Patient'
+        verbose_name_plural = 'Patients'
+
+
 class Doctor(User):
     patient = models.ManyToManyField("Patient", related_name="doctors_of_patient")
 
@@ -36,9 +43,3 @@ class Doctor(User):
         verbose_name = 'Doctor'
         verbose_name_plural = 'Doctors'
 
-
-class Patient(User):
-
-    class Meta:
-        verbose_name = 'Patient'
-        verbose_name_plural = 'Patients'
