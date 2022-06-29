@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
-from telehealth.main.models import *
+from .models import *
 
 
 class LogInForm(forms.Form):
@@ -74,25 +74,33 @@ class ChangePasswordForm(NewPasswordMixin):
         return self.user
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class SignUpForm(NewPasswordMixin, forms.ModelForm):
     """Form enabling unregistered users to sign up."""
 
     class Meta:
         """Form options."""
-
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email', 'bio']
-        widgets = { 'bio': forms.Textarea() }
+        fields = ['email', 'first_name', 'last_name', 'birthdate']
+        widgets = {
+            'birthdate': DateInput(),
+        }
 
     def save(self):
         """Create a new user."""
         super().save(commit=False)
+        birthdate_on_form=self.cleaned_data.get('birthdate'),
+        if birthdate_on_form and birthdate_on_form > timezone.now().date():
+            self.add_error('birthdate_on_form', 'The current due date should not be in the future')
+
         user = User.objects.create_user(
-            self.cleaned_data.get('username'),
+            email= self.cleaned_data.get('email'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
-            email=self.cleaned_data.get('email'),
-            bio=self.cleaned_data.get('bio'),
+            birthdate=birthdate_on_form,
             password=self.cleaned_data.get('new_password'),
         )
         return user
