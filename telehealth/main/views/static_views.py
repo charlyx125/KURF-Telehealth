@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from .mixins import LoginProhibitedMixin
 from django.shortcuts import redirect
 from django.urls import reverse
-from telehealth.main.models import *
+from main.models import *
 
 
 class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSES MATTERS

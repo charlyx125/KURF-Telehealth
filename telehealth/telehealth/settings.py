@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'telehealth',
+    'main',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
@@ -124,7 +125,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Default user model
-AUTH_USER_MODEL = "ticketing_system.User"
+AUTH_USER_MODEL = "main.User"
 
 # Login URL for redirecting users from login protected views
 LOGIN_URL = 'log_in'

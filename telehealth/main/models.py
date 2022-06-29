@@ -37,7 +37,7 @@ class Patient(User):
 
 
 class Doctor(User):
-    patient = models.ManyToManyField("Patient", related_name="doctors_of_patient")
+    single_patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="doctors_of_this_patient")
 
     class Meta:
         verbose_name = 'Doctor'

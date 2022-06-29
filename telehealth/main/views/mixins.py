@@ -2,8 +2,8 @@
 from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
-from telehealth.telehealth import settings
-from telehealth.main.models import *
+from telehealth import settings
+from main.models import *
 from django.http import Http404
 from django.core.exceptions import ImproperlyConfigured
 

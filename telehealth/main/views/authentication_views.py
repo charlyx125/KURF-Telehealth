@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
-from telehealth.main.forms import LogInForm
+from main.forms import LogInForm
 from .mixins import LoginProhibitedMixin
 
 
