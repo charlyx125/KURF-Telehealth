@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from .mixins import LoginProhibitedMixin
 from django.shortcuts import redirect
 from django.urls import reverse
-from main.models import *
+from ..models import *
 
 
 class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSES MATTERS
@@ -14,8 +14,8 @@ class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSE
     template_name = 'home.html'
 
 
-class FeedView(LoginRequiredMixin, TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         kwargs['current_user'] = self.request.user
-        return render(request, 'feed.html', context=kwargs)
+        return render(request, 'dashboard.html', context=kwargs)

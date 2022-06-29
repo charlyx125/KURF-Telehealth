@@ -131,4 +131,5 @@ AUTH_USER_MODEL = "main.User"
 LOGIN_URL = 'log_in'
 
 # URL where @login_prohibited redirects to
-REDIRECT_URL_WHEN_LOGGED_IN = 'home_logged'
+REDIRECT_URL_WHEN_LOGGED_IN = 'feed'
+

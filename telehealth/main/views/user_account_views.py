@@ -30,7 +30,7 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Redirect the user after successful password change."""
         messages.add_message(self.request, messages.SUCCESS, "Password updated!")
-        return reverse('feed')
+        return reverse('dashboard')
 
 
 class SignUpView(LoginProhibitedMixin, FormView):

@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse
-from main.forms import LogInForm
+from ..forms import LogInForm
 from .mixins import LoginProhibitedMixin
 
 
@@ -21,7 +21,6 @@ class LogInView(LoginProhibitedMixin, View):
 
     def post(self, request):
         """Handle log in attempt."""
-
         form = LogInForm(request.POST)
         self.next = request.POST.get('next') or settings.REDIRECT_URL_WHEN_LOGGED_IN
         user = form.get_user()
@@ -33,7 +32,6 @@ class LogInView(LoginProhibitedMixin, View):
 
     def render(self):
         """Render log in template with blank log in form."""
-
         form = LogInForm()
         return render(self.request, 'log_in.html', {'form': form, 'next': self.next})
 
