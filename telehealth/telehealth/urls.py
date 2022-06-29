@@ -21,8 +21,8 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home.as_view(), name='home'),
-    path('home_logged/', views.HomeLoggedView.as_view(), name='home_logged'),
+    path('feed/', views.FeedView.as_view(), name='feed'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
-
+    path('change_password/', views.ChangePasswordView.as_view(), 'change_password')
 ]

@@ -14,8 +14,8 @@ class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSE
     template_name = 'home.html'
 
 
-class HomeLoggedView(LoginRequiredMixin, TemplateView):
+class FeedView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         kwargs['current_user'] = self.request.user
-        return render(request, 'home_logged.html', context=kwargs)
+        return render(request, 'feed.html', context=kwargs)
