@@ -12,3 +12,10 @@ from main.models import *
 class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSES MATTERS
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
     template_name = 'home.html'
+
+
+class HomeLoggedView(LoginRequiredMixin, TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        kwargs['current_user'] = self.request.user
+        return render(request, 'home_logged.html', context=kwargs)
