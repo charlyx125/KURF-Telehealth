@@ -17,5 +17,10 @@ class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSE
 class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
-        kwargs['current_user'] = self.request.user
-        return render(request, 'dashboard.html', context=kwargs)
+        kwargs['current_user'] = request.user
+        if request.user.is_patient():
+            return render(request, 'patient_dashboard.html', context=kwargs)
+        elif request.user.is_doctor():
+            return render(request, 'doctor_dashboard.html', context=kwargs)
+        else:
+            return render(request, 'dashboard.html', context=kwargs)

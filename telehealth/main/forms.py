@@ -12,7 +12,6 @@ class LogInForm(forms.Form):
 
     def get_user(self):
         """Returns authenticated user if possible."""
-
         user = None
         if self.is_valid():
             email = self.cleaned_data.get('email')
@@ -80,7 +79,6 @@ class DateInput(forms.DateInput):
 
 class SignUpForm(NewPasswordMixin, forms.ModelForm):
     """Form enabling unregistered users to sign up."""
-    # type = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
 
     class Meta:
         """Form options."""
@@ -91,7 +89,7 @@ class SignUpForm(NewPasswordMixin, forms.ModelForm):
         """Create a new user."""
         super().save(commit=False)
         user = User.objects.create_user(
-            email= self.cleaned_data.get('email'),
+            email=self.cleaned_data.get('email'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
             password=self.cleaned_data.get('new_password'),

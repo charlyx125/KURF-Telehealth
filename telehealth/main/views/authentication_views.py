@@ -12,7 +12,7 @@ from .mixins import LoginProhibitedMixin
 class LogInView(LoginProhibitedMixin, View):
     """View that handles log in."""
     http_method_names = ['get', 'post']
-    redirect_when_logged_in_url = 'home'
+    redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
 
     def get(self, request):
         """Display log in template."""

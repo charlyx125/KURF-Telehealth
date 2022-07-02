@@ -12,7 +12,8 @@
 {#    </div>#}
     <div class="col-xs-12 col-lg-6 col-xl-8">
       <h1>Dashboard</h1>
-{#      {% include 'partials/posts_as_table.html' with posts=posts %}#}
+      {% block dashboard_content %}
+      {% endblock %}
     </div>
   </div>
 </div>
