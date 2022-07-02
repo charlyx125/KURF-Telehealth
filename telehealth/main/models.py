@@ -13,20 +13,21 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
     objects = UserManager()
 
-    username = models.CharField(max_length=30, unique=True,
-                                validators=[RegexValidator(regex=r'^\w{3,}$', message='Username must consist of at least three alphanumericals')])
+    """Username is user's email"""
+    username = None
     email = models.EmailField(unique=True, blank=False, null=False)
+
     first_name = models.CharField(max_length=50, unique=False, blank=False, null=False)
     last_name = models.CharField(max_length=50, unique=False, blank=False, null=False)
-    birthdate = models.DateField(blank=False, null=False)
 
     def __str__(self):
         return self.first_name + ' ' + self.last_name
 
-    def clean(self):
-        super().clean()
-        if self.birthdate > timezone.now().date():
-            raise ValidationError("The date of birth should not be in the future")
+    def is_patient(self):
+        return Patient.objects.filter(email=self.email).exists()
+
+    def is_doctor(self):
+        return Doctor.objects.filter(email=self.email).exists()
 
 
 class Patient(User):

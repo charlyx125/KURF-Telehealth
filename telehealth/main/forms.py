@@ -80,27 +80,20 @@ class DateInput(forms.DateInput):
 
 class SignUpForm(NewPasswordMixin, forms.ModelForm):
     """Form enabling unregistered users to sign up."""
+    # type = forms.ModelChoiceField(queryset=User.objects.all(), required=True)
 
     class Meta:
         """Form options."""
         model = User
-        fields = ['email', 'first_name', 'last_name', 'birthdate']
-        widgets = {
-            'birthdate': DateInput(),
-        }
+        fields = ['email', 'first_name', 'last_name']
 
     def save(self):
         """Create a new user."""
         super().save(commit=False)
-        birthdate_on_form=self.cleaned_data.get('birthdate'),
-        if birthdate_on_form and birthdate_on_form > timezone.now().date():
-            self.add_error('birthdate_on_form', 'The current due date should not be in the future')
-
         user = User.objects.create_user(
             email= self.cleaned_data.get('email'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
-            birthdate=birthdate_on_form,
             password=self.cleaned_data.get('new_password'),
         )
         return user
