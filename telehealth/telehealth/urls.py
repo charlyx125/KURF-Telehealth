@@ -24,6 +24,6 @@ urlpatterns = [
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('log_in/', views.LogInView.as_view(), name='log_in'),
     path('log_out/', views.log_out, name='log_out'),
-    path('change_password/', views.ChangePasswordView.as_view(), 'change_password'),
+    path('change_password/', views.ChangePasswordView.as_view(), name='change_password'),
     path('sign_up/', views.SignUpView.as_view(), name='sign_up'),
 ]

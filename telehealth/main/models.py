@@ -32,6 +32,26 @@ class User(AbstractUser):
 
 class Patient(User):
 
+    def save(self, *args, **kwargs):
+        """
+        Save patient object to the database. Removes all other entries if there
+        are any.
+        """
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(Patient, self).save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """
+        Load object from the database. Failing that, create a new empty
+        (default) instance of the object and return it (without saving it
+        to the database).
+        """
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            return cls()
+
     class Meta:
         verbose_name = 'Patient'
         verbose_name_plural = 'Patients'

@@ -25,7 +25,7 @@ class NewPasswordMixin(forms.Form):
     """Form mixing for new_password and password_confirmation fields."""
 
     new_password = forms.CharField(
-        label='Password',
+        label='New password',
         widget=forms.PasswordInput(),
         validators=[RegexValidator(
             regex=r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$',
@@ -59,7 +59,7 @@ class ChangePasswordForm(NewPasswordMixin):
         super().clean()
         password = self.cleaned_data.get('password')
         if self.user is not None:
-            user = authenticate(username=self.user.username, password=password)
+            user = authenticate(email=self.user.email, password=password)
         else:
             user = None
         if user is None:
