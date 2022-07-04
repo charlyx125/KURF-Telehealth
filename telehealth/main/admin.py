@@ -23,10 +23,10 @@ class DoctorAdmin(UserAdmin):
 
 
 @admin.register(Chat)
-class ChatAdmin(UserAdmin):
+class ChatAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(Message)
-class MessageAdmin(UserAdmin):
+class MessageAdmin(admin.ModelAdmin):
     pass

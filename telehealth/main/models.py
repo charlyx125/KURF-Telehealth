@@ -81,5 +81,4 @@ class Message(models.Model):
 
     class Meta:
         """Most recent message displayed at the bottom"""
-        abstract = True
         ordering = ['created_at']
