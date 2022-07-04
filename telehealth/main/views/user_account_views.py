@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView, UpdateView
-from django.urls import reverse
+from django.shortcuts import render, redirect, reverse
 from .mixins import LoginProhibitedMixin
 from ..forms import *
 
@@ -35,9 +35,8 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
 
 class SignUpView(LoginProhibitedMixin, FormView):
     """View that signs up user."""
-
-    form_class = SignUpForm
-    template_name = "sign_up.html"
+    # form_class = SignUpForm
+    # template_name = "sign_up.html"
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
 
     def form_valid(self, form):
@@ -46,4 +45,24 @@ class SignUpView(LoginProhibitedMixin, FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, "Your sign up is successfully!")
         return reverse(settings.REDIRECT_URL_WHEN_LOGGED_IN)
+
+
+class PatientSignUpView(SignUpView):
+    """View that signs up patient."""
+    form_class = PatientSignUpForm
+    template_name = "patient_sign_up.html"
+    redirect_url = 'home'
+
+    def get(self, request, *args, **kwargs):
+        if Patient.objects.count():
+            return redirect(self.redirect_url)
+        else:
+            return super().get(request, *args, **kwargs)
+
+
+class DoctorSignUpView(SignUpView):
+    """View that signs up patient."""
+    form_class = DoctorSignUpForm
+    template_name = "doctor_sign_up.html"

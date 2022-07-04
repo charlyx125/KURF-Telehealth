@@ -11,7 +11,6 @@ from django.core.exceptions import ImproperlyConfigured
 class LoginProhibitedMixin:
     """Mixin that redirects when a user is logged in."""
     login_url = settings.LOGIN_URL
-
     redirect_when_logged_in_url = None
 
     def dispatch(self, *args, **kwargs):

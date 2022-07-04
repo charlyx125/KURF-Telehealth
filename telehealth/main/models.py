@@ -58,7 +58,6 @@ class Patient(User):
 
 
 class Doctor(User):
-    single_patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="doctors_of_this_patient")
 
     class Meta:
         verbose_name = 'Doctor'

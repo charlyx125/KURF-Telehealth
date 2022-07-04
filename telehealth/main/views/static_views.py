@@ -13,6 +13,10 @@ class Home(LoginProhibitedMixin, TemplateView): # THE ORDER OF THESE SUPERCLASSE
     redirect_when_logged_in_url = settings.REDIRECT_URL_WHEN_LOGGED_IN
     template_name = 'home.html'
 
+    def get_context_data(self, **kwargs):
+        kwargs['patient_count'] = Patient.objects.count()
+        return kwargs
+
 
 class DashboardView(LoginRequiredMixin, TemplateView):
 

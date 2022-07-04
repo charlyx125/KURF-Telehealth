@@ -73,25 +73,47 @@ class ChangePasswordForm(NewPasswordMixin):
         return self.user
 
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
-
-
 class SignUpForm(NewPasswordMixin, forms.ModelForm):
     """Form enabling unregistered users to sign up."""
 
     class Meta:
-        """Form options."""
         model = User
+        """Form options."""
         fields = ['email', 'first_name', 'last_name']
 
+
+class PatientSignUpForm(SignUpForm):
+
+    class Meta:
+        model = Patient
+        fields = ['email', 'first_name', 'last_name']
+
+
     def save(self):
-        """Create a new user."""
+        """Create a new patient."""
         super().save(commit=False)
-        user = User.objects.create_user(
+        user = Patient.objects.create_user(
             email=self.cleaned_data.get('email'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
-            password=self.cleaned_data.get('new_password'),
+            password=self.cleaned_data.get('new_password')
+        )
+        return user
+
+
+class DoctorSignUpForm(SignUpForm):
+
+    class Meta:
+        model = Doctor
+        fields = ['email', 'first_name', 'last_name']
+
+    def save(self):
+        """Create a new patient."""
+        super().save(commit=False)
+        user = Doctor.objects.create_user(
+            email=self.cleaned_data.get('email'),
+            first_name=self.cleaned_data.get('first_name'),
+            last_name=self.cleaned_data.get('last_name'),
+            password=self.cleaned_data.get('new_password')
         )
         return user

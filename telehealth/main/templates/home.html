@@ -7,9 +7,16 @@
         <div class="card cover-card offset-sm-2 offset-md-4 offset-lg-7">
           <h1 class="cover-heading">Telehealth</h1>
           <p class="cover-text">The place for doctors and patients</p>
+            {%  if not patient_count  %}
           <p>
-            <a href='{% url 'sign_up' %}' class="btn btn-lg btn-secondary">
-              Sign up
+            <a href='{% url 'patient_sign_up' %}' class="btn btn-lg btn-secondary">
+              Patient sign up
+            </a>
+          </p>
+            {% endif %}
+            <p>
+            <a href='{% url 'doctor_sign_up' %}' class="btn btn-lg btn-secondary">
+              Doctor sign up
             </a>
           </p>
           <p>
