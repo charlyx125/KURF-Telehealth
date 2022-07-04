@@ -63,3 +63,23 @@ class Doctor(User):
         verbose_name = 'Doctor'
         verbose_name_plural = 'Doctors'
 
+
+class Chat(models.Model):
+    title = models.CharField(max_length=200, blank=False, default="Untitled")
+    users = models.ManyToManyField(User, related_name="chats_involved_in")
+
+    class Meta:
+        verbose_name = 'Chat'
+        verbose_name_plural = 'Chats'
+
+
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages_in_chat")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_sent")
+    text = models.CharField(max_length=280, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        """Most recent message displayed at the bottom"""
+        abstract = True
+        ordering = ['created_at']
