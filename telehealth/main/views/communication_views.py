@@ -9,7 +9,32 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ShowChatView(LoginRequiredMixin, DetailView):
-    pass
+    """View that shows individual ticket contents"""
+    model = Chat
+    template_name = "Show-Ticket.html"
+    pk_url_kwarg = 'ticket_id'
+    context_object_name = 'ticket'
+
+    def get_redirect_url(self):
+        return 'ticket-list'
+
+    def get(self, request, *args, **kwargs):
+        """Handle get request, and redirect to ticket-list if ticket_id invalid."""
+        try:
+            object = self.get_object()
+        except Http404:
+            return redirect(self.get_redirect_url())
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """Generate context data to be shown in the template."""
+        kwargs['object'] = self.get_object()
+        kwargs['current_user'] = self.request.user
+        kwargs['form'] = CreateMessageForm()
+        kwargs['anonymous_username'] = ANONYMOUS_USERNAME
+        kwargs['anonymous'] = kwargs['object'].anonymous
+        kwargs['student'] = kwargs['object'].student
 
 
 # class ReplyChatView(LoginRequiredMixin, CreateView):
