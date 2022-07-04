@@ -20,3 +20,13 @@ class PatientAdmin(UserAdmin):
 @admin.register(Doctor)
 class DoctorAdmin(UserAdmin):
     pass
+
+
+@admin.register(Chat)
+class ChatAdmin(UserAdmin):
+    pass
+
+
+@admin.register(Message)
+class MessageAdmin(UserAdmin):
+    pass
