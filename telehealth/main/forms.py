@@ -117,3 +117,23 @@ class DoctorSignUpForm(SignUpForm):
             password=self.cleaned_data.get('new_password')
         )
         return user
+
+
+class CreateChatForm(forms.ModelForm):
+
+    class Meta:
+        model = Chat
+        fields = ["title", "first_user"]
+        labels = {
+            'first_user': "Who would you like to chat with?"
+        }
+
+
+class CreateMessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ["text"]
+        widgets = {
+            'text': forms.Textarea,
+        }
+

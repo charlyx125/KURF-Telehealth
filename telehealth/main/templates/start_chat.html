@@ -1,0 +1,10 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <h1>Start Chat</h1>
+    <form action="{% url 'start_chat' %}" method="post">
+        {% csrf_token %}
+        {% include "partials/bootstrap_form.html" with form=create_chat_form %}
+        {% include "partials/bootstrap_form.html" with form=create_message_form %}
+        <input type="submit" value="Send chat" class="btn btn-primary">
+    </form>
+{% endblock %}

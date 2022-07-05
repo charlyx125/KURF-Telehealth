@@ -66,7 +66,9 @@ class Doctor(User):
 
 class Chat(models.Model):
     title = models.CharField(max_length=200, blank=False, default="Untitled")
-    users = models.ManyToManyField(User, related_name="chats_involved_in")
+    first_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_started")
+    second_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_received")
+
 
     class Meta:
         verbose_name = 'Chat'
@@ -74,7 +76,7 @@ class Chat(models.Model):
 
 
 class Message(models.Model):
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages_in_chat")
+    text = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages_in_this_chat")
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages_sent")
     text = models.CharField(max_length=280, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
