@@ -44,7 +44,8 @@ class StartChatView(LoginRequiredMixin, CreateView):
         if chat_form.is_valid() and message_form.is_valid():
             self.form_valid(chat_form)
             self.form_valid(message_form)
-            messages.add_message(self.request, messages.SUCCESS, "Successful starting of chat")
+            #TODO: remove this message after implementing show chat view
+            messages.add_message(self.request, messages.SUCCESS, "Successful chat")
             return redirect('user_list')
         else:
             messages.add_message(request, messages.INFO, "The details entered are not correct!")
