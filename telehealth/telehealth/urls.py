@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from main import views
-from main.forms import *
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +27,6 @@ urlpatterns = [
     path('change_password/', views.ChangePasswordView.as_view(), name='change_password'),
     path('patient_sign_up/', views.PatientSignUpView.as_view(), name='patient_sign_up'),
     path('doctor_sign_up/', views.DoctorSignUpView.as_view(), name='doctor_sign_up'),
+    path('start_chat/<int:request_user>/<int:user_pk>', views.StartChatView.as_view(), name='start_chat'),
+    path('user_list/', views.UserListView.as_view(), name='user_list'),
 ]

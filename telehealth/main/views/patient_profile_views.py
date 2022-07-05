@@ -8,3 +8,4 @@ from ..forms import *
 
 class ShowPatientProfileView(LoginRequiredMixin, DetailView):
     pass
+

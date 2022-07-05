@@ -1,11 +1,17 @@
 from django.forms import Form
 from django.views import View
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, ListView
 from ..forms import *
 from ..models import *
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+class UserListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'user_list.html'
+    context_object_name = "users"
 
 
 class StartChatView(LoginRequiredMixin, CreateView):
@@ -15,9 +21,8 @@ class StartChatView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs['users'] = User.objects.all()
-
-
-
+        kwargs['request_user'] = self.request.user.pk
+        return kwargs
 
 # class ShowChatView(LoginRequiredMixin, DetailView):
 #     """View that shows individual ticket contents"""
