@@ -51,3 +51,30 @@ class StartChatView(LoginRequiredMixin, CreateView):
             messages.add_message(request, messages.INFO, "The details entered are not correct!")
             return self.render_to_response(
                 self.get_context_data(create_chat_form=chat_form, create_message_form=message_form))
+
+
+class ShowChatView(LoginRequiredMixin, DetailView):
+    model = Chat
+    template_name = "show_chat.html"
+    pk_url_kwarg = 'chat_id'
+    context_object_name = 'chat'
+
+    def get_redirect_url(self):
+        return 'user_list'
+
+
+class ChatListView(LoginRequiredMixin, ListView):
+    """View that shows all tickets directed to a staff/student"""
+    template_name = "chat_list.html"
+    queryset = "get_queryset"
+    context_object_name = "chat"
+
+    def get_queryset(self):
+        queryset = Chat.objects.fitler(first_user_id=self.request.user.pk, second_user_id=self.request.user.pk)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        """Generate context data to be shown in the template."""
+        context = super().get_context_data(**kwargs)
+        context['current_user'] = self.request.user
+        return context

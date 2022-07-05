@@ -69,6 +69,8 @@ class Chat(models.Model):
     first_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_started")
     second_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_received")
 
+    def is_involved(self, user):
+        return self.first_user_id == user.pk or self.second_user_id == user.pk
 
     class Meta:
         verbose_name = 'Chat'
