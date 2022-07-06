@@ -51,6 +51,7 @@ class StartChatView(LoginRequiredMixin, CreateView):
                 other_person_pk = self.kwargs['chat_instance'].get_other_user_in_chat(self.request.user)
                 other_user = User.objects.get(id=other_person_pk)
                 messages.add_message(self.request, messages.INFO, f"You have an existing chat with {other_user}")
+                self.kwargs['chat_instance'].delete()
             else:
                 self.form_valid(message_form)
                 messages.add_message(self.request, messages.SUCCESS, "Successful chat")
@@ -79,7 +80,7 @@ class ChatListView(LoginRequiredMixin, ListView):
     context_object_name = "chat"
 
     def get_queryset(self):
-        queryset = Chat.objects.filter(Q(first_user__id=self.request.user.pk) | Q(second_user_id=self.request.user.pk)).values()
+        queryset = Chat.objects.filter(Q(first_user=self.request.user) | Q(second_user=self.request.user))
         print(queryset)
         return queryset
 
