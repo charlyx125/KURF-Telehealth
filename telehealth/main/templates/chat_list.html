@@ -1,0 +1,17 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <h2>Your existing chats with </h2>
+    {% for chat in chat_list %}
+        {%  if current_user.pk is not chat.first_user.pk %}
+            <h3>{{ chat.first_user }}</h3>
+        {%  else  %}
+             <h3>{{ chat.second_user }}</h3>
+        {% endif %}
+    {%  endfor %}
+      <p>
+        <a href='{% url 'start_chat' %}' class="btn btn-lg btn-secondary">
+            Start a chat with other users
+        </a>
+      </p>
+{% endblock %}
+
