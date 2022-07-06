@@ -5,6 +5,7 @@ from django.core.validators import RegexValidator, MinValueValidator
 from django.utils import timezone
 from datetime import datetime
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 
 
 class User(AbstractUser):
@@ -66,8 +67,8 @@ class Doctor(User):
 
 class Chat(models.Model):
     title = models.CharField(max_length=200, blank=False, default="Untitled")
-    first_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_started")
-    second_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_received")
+    first_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_received")
+    second_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats_started")
 
     def is_involved(self, user):
         return self.first_user_id == user.pk or self.second_user_id == user.pk

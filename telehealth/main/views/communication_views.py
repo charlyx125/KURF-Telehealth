@@ -10,21 +10,32 @@ from django.db.models import Q
 from ..views.mixins import *
 
 
-class UserListView(LoginRequiredMixin, ListView):
-    model = User
-    template_name = 'user_list.html'
-    context_object_name = "users"
-
-
 class StartChatView(LoginRequiredMixin, CreateView):
     model = Chat
     template_name = 'start_chat.html'
     http_method_names = ['get', 'post']
 
+    def get_users_with_existing_chats_with_current_user(self):
+        current_user = self.request.user
+        chats_received = current_user.chats_received.all()
+        chats_sent = current_user.chats_started.all()
+        chats = chats_received.union(chats_sent)
+        chats = list(chats)
+        for i in range(len(chats)):
+            other_user_in_chat = chats[i].get_other_user_in_chat(current_user)
+            chats[i] = other_user_in_chat
+        return chats
+
     def get_context_data(self, **kwargs):
         kwargs['users'] = User.objects.all()
         kwargs['current_user'] = self.request.user
         kwargs['create_chat_form'] = kwargs.get('create_chat_form', CreateChatForm(prefix="create_chat_form"))
+        ######
+        # The user is only able to chat with users they have not had a chat before.
+        # The user is not able to chat with themselves.
+        existing_chats = self.get_users_with_existing_chats_with_current_user()
+        kwargs['create_chat_form'].fields['first_user'].queryset = User.objects.exclude(id__in=existing_chats).exclude(id=self.request.user.pk)
+        ######
         kwargs['create_message_form'] = kwargs.get('create_message_form', CreateMessageForm(prefix="create_message_form"))
         return kwargs
 
@@ -44,20 +55,15 @@ class StartChatView(LoginRequiredMixin, CreateView):
         return chat_instance.is_involved(self.request.user)
 
     def post(self, request, *args, **kwargs):
+        current_user = request.user
         chat_form = CreateChatForm(data=request.POST, prefix="create_chat_form")
         message_form = CreateMessageForm(data=request.POST, prefix="create_message_form")
         if chat_form.is_valid() and message_form.is_valid():
             self.form_valid(chat_form)
-            if self.check_chat_exists_in_db(self.kwargs['chat_instance']):
-                other_person_pk = self.kwargs['chat_instance'].get_other_user_in_chat(self.request.user)
-                other_user = User.objects.get(id=other_person_pk)
-                messages.add_message(self.request, messages.INFO, f"You have an existing chat with {other_user}")
-                self.kwargs['chat_instance'].delete()
-            else:
-                self.form_valid(message_form)
-                messages.add_message(self.request, messages.SUCCESS, "Successful chat")
-            # TODO: remove this message after implementing show chat view
-            return redirect('user_list')
+            chat = self.kwargs['chat_instance']
+            self.form_valid(message_form)
+            messages.add_message(self.request, messages.SUCCESS, "Successful chat")
+            return redirect(f'/show_chat/{chat.id}')
         else:
             messages.add_message(request, messages.INFO, "The details entered are not correct!")
             return self.render_to_response(
