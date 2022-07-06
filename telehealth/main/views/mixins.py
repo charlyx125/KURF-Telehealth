@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from telehealth import settings
-from main.models import *
+from ..models import *
 from django.http import Http404
 from django.core.exceptions import ImproperlyConfigured
 
@@ -33,3 +33,26 @@ class LoginProhibitedMixin:
             )
         else:
             return self.redirect_when_logged_in_url
+
+
+class UserInvolvedInChatOnly(UserPassesTestMixin):
+    redirect_result = False
+
+    """override this function to change the redirect_url"""
+    def get_redirect_url(self):
+        return 'chat_list'
+
+    def test_func(self):
+        try:
+            chat = self.get_object()
+        except Http404:
+            messages.add_message(self.request, messages.INFO, 'Please select a different chat')
+            return redirect(self.get_redirect_url())
+        else:
+            return Chat.is_involved(chat, self.request.user)
+
+    def handle_no_permission(self):
+        if self.request.user.is_authenticated:
+            return redirect(self.get_redirect_url())
+        else:
+            return redirect('log_in')

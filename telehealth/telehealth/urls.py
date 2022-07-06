@@ -28,7 +28,8 @@ urlpatterns = [
     path('patient_sign_up/', views.PatientSignUpView.as_view(), name='patient_sign_up'),
     path('doctor_sign_up/', views.DoctorSignUpView.as_view(), name='doctor_sign_up'),
     path('start_chat/', views.StartChatView.as_view(), name='start_chat'),
-    path('show_chat/<int:chat_id>',views.ShowChatView.as_view(), name='show_chat'),
+    path('show_chat/<int:chat_id>/',views.ShowChatView.as_view(), name='show_chat'),
     path('chat_list/', views.ChatListView.as_view(), name='chat_list'),
+    path('reply_chat/<int:chat_id>',views.ReplyChatView.as_view(), name='reply_chat'),
     path('user_list/', views.UserListView.as_view(), name='user_list'),
 ]

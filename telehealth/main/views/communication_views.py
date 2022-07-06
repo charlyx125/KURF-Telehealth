@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from ..views.mixins import *
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -63,14 +64,11 @@ class StartChatView(LoginRequiredMixin, CreateView):
                 self.get_context_data(create_chat_form=chat_form, create_message_form=message_form))
 
 
-class ShowChatView(LoginRequiredMixin, DetailView):
+class ShowChatView(LoginRequiredMixin, UserInvolvedInChatOnly, DetailView):
     model = Chat
     template_name = "show_chat.html"
     pk_url_kwarg = 'chat_id'
     context_object_name = 'chat'
-
-    # def get_redirect_url(self):
-    #     return 'ticket-list'
 
     def get_context_data(self, **kwargs):
         """Generate context data to be shown in the template."""
@@ -81,28 +79,27 @@ class ShowChatView(LoginRequiredMixin, DetailView):
         return kwargs
 
 
-class ReplyChatView(LoginRequiredMixin, CreateView):
+class ReplyChatView(LoginRequiredMixin, UserInvolvedInChatOnly, CreateView):
     model = Message
     pk_url_kwarg = 'chat_id'
     form_class = CreateMessageForm
     queryset = Chat.objects.all()
     context_object_name = 'chat'
-    template_name = "Show-Ticket.html"
+    template_name = "show_chat.html"
 
     def get_context_data(self, **kwargs):
-        kwargs['ticket'] = self.get_object()
+        kwargs['chat'] = self.get_object()
         kwargs['current_user'] = self.request.user
         kwargs['form'] = CreateMessageForm()
-        kwargs['anonymous_username'] = ANONYMOUS_USERNAME
         return kwargs
 
     def form_valid(self, form):
-        form.instance.ticket = self.get_object()
+        form.instance.chat = self.get_object()
         form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('show-ticket', kwargs={'ticket_id': self.get_object().pk})
+        return reverse('show_chat', kwargs={'chat_id': self.get_object().pk})
 
 
 class ChatListView(LoginRequiredMixin, ListView):
