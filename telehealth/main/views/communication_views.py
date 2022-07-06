@@ -6,6 +6,7 @@ from ..models import *
 from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 
 class UserListView(LoginRequiredMixin, ListView):
@@ -38,14 +39,22 @@ class StartChatView(LoginRequiredMixin, CreateView):
             form.instance.author = User.objects.get(id=self.request.user.pk)
             form.save()
 
+    def check_chat_exists_in_db(self, chat_instance):
+        return chat_instance.is_involved(self.request.user)
+
     def post(self, request, *args, **kwargs):
         chat_form = CreateChatForm(data=request.POST, prefix="create_chat_form")
         message_form = CreateMessageForm(data=request.POST, prefix="create_message_form")
         if chat_form.is_valid() and message_form.is_valid():
             self.form_valid(chat_form)
-            self.form_valid(message_form)
-            #TODO: remove this message after implementing show chat view
-            messages.add_message(self.request, messages.SUCCESS, "Successful chat")
+            if self.check_chat_exists_in_db(self.kwargs['chat_instance']):
+                other_person_pk = self.kwargs['chat_instance'].get_other_user_in_chat(self.request.user)
+                other_user = User.objects.get(id=other_person_pk)
+                messages.add_message(self.request, messages.INFO, f"You have an existing chat with {other_user}")
+            else:
+                self.form_valid(message_form)
+                messages.add_message(self.request, messages.SUCCESS, "Successful chat")
+            # TODO: remove this message after implementing show chat view
             return redirect('user_list')
         else:
             messages.add_message(request, messages.INFO, "The details entered are not correct!")
@@ -70,11 +79,13 @@ class ChatListView(LoginRequiredMixin, ListView):
     context_object_name = "chat"
 
     def get_queryset(self):
-        queryset = Chat.objects.fitler(first_user_id=self.request.user.pk, second_user_id=self.request.user.pk)
+        queryset = Chat.objects.filter(Q(first_user__id=self.request.user.pk) | Q(second_user_id=self.request.user.pk)).values()
+        print(queryset)
         return queryset
 
     def get_context_data(self, **kwargs):
         """Generate context data to be shown in the template."""
         context = super().get_context_data(**kwargs)
         context['current_user'] = self.request.user
+        context['chat_list'] = self.get_queryset()
         return context

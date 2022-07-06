@@ -3,9 +3,13 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-lg-6 col-xl-8">
-      <h1>Dashboard</h1>
       {% block dashboard_content %}
       {% endblock %}
+            <p>
+                <a href='{% url 'chat_list' %}' class="btn btn-lg btn-secondary">
+                    Chat
+                </a>
+          </p>
     </div>
   </div>
 </div>

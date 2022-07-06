@@ -72,6 +72,12 @@ class Chat(models.Model):
     def is_involved(self, user):
         return self.first_user_id == user.pk or self.second_user_id == user.pk
 
+    def get_other_user_in_chat(self, user):
+        if user.pk==self.first_user_id:
+            return self.second_user.id
+        else:
+            return self.first_user.id
+
     class Meta:
         verbose_name = 'Chat'
         verbose_name_plural = 'Chats'
