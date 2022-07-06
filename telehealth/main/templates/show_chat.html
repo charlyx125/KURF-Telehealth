@@ -1,0 +1,18 @@
+{% extends 'base_content.html' %}
+{% block content %}
+    <a href='{% url 'chat_list' %}' class="btn btn-lg btn-primary">Back to chat list</a>
+    <h3>Messages</h3>
+    {% for message in chat_messages %}
+        {% if message.author.pk is current_user.pk %}
+            <p>You : {{ message.text }}</p>
+        {% else %}
+             <p>{{ message.author }} : {{ message.text }}</p>
+        {% endif %}
+    {% endfor %}
+{#    <form action="{% url 'chat_reply' ticket_id=ticket.id %}" method="post">#}
+{#          {% csrf_token %}#}
+{#          {% include 'partials/bootstrap_form.html' with form=form %}#}
+{#          <input type="submit" value="Send message" class="btn btn-primary">#}
+{#    </form>#}
+    <br>
+{% endblock %}

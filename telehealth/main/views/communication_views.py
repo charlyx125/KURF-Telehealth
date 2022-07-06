@@ -69,8 +69,40 @@ class ShowChatView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = 'chat_id'
     context_object_name = 'chat'
 
-    def get_redirect_url(self):
-        return 'user_list'
+    # def get_redirect_url(self):
+    #     return 'ticket-list'
+
+    def get_context_data(self, **kwargs):
+        """Generate context data to be shown in the template."""
+        kwargs['chat'] = self.get_object()
+        kwargs['chat_messages'] = kwargs['chat'].messages_in_this_chat.all()
+        kwargs['current_user'] = self.request.user
+        kwargs['form'] = CreateMessageForm()
+        return kwargs
+
+
+class ReplyChatView(LoginRequiredMixin, CreateView):
+    model = Message
+    pk_url_kwarg = 'chat_id'
+    form_class = CreateMessageForm
+    queryset = Chat.objects.all()
+    context_object_name = 'chat'
+    template_name = "Show-Ticket.html"
+
+    def get_context_data(self, **kwargs):
+        kwargs['ticket'] = self.get_object()
+        kwargs['current_user'] = self.request.user
+        kwargs['form'] = CreateMessageForm()
+        kwargs['anonymous_username'] = ANONYMOUS_USERNAME
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.ticket = self.get_object()
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('show-ticket', kwargs={'ticket_id': self.get_object().pk})
 
 
 class ChatListView(LoginRequiredMixin, ListView):
